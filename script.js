@@ -39,7 +39,7 @@ document.getElementById("calcBtn").addEventListener("click", function () {
 
   // Build ovens list in sequence: ovens are objects with owner and local index and available time
   const ovensList = [];
-  let globalOvenId = 0;
+  let globalOvenId = 1;
   for (const w of workers) {
     for (let i = 0; i < w.ovens; i++) {
       // initial available = worker start + i*2 minutes (2 minute gap between ovens of same worker)
