@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مخطط خبز المصانع - Planner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="card">
+    <h1>Bakery Planner — جدول الأفران</h1>
+
+    <section class="form-row">
+      <label>عدد الطبخات (batches)</label>
+      <input id="batches" type="number" min="1" placeholder="مثال: 18">
+    </section>
+
+    <section id="workers-area">
+      <!-- أربع صفوف عامل كبداية؛ يمكنك تعديل الأسماء وعدد الأفران والدقائق ووقت البداية -->
+      <div class="worker-row">
+        <input class="name" type="text" placeholder="اسم (مثال: عدنان)">
+        <input class="ovens" type="number" min="0" placeholder="عدد الأفران">
+        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن">
+        <input class="startTime" type="time" placeholder="وقت البدء">
+      </div>
+
+      <div class="worker-row">
+        <input class="name" type="text" placeholder="اسم">
+        <input class="ovens" type="number" min="0" placeholder="عدد الأفران">
+        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن">
+        <input class="startTime" type="time" placeholder="وقت البدء">
+      </div>
+
+      <div class="worker-row">
+        <input class="name" type="text" placeholder="اسم">
+        <input class="ovens" type="number" min="0" placeholder="عدد الأفران">
+        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن">
+        <input class="startTime" type="time" placeholder="وقت البدء">
+      </div>
+
+      <div class="worker-row">
+        <input class="name" type="text" placeholder="اسم">
+        <input class="ovens" type="number" min="0" placeholder="عدد الأفران">
+        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن">
+        <input class="startTime" type="time" placeholder="وقت البدء">
+      </div>
+    </section>
+
+    <button id="calcBtn">احسب الجدول</button>
+
+    <section id="summary">
+      <h2>النتائج</h2>
+      <div id="results"></div>
+    </section>
+  </main>
+
+  <script src="script.js">
+  </script>
+</body>
+</html>
