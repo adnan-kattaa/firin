@@ -143,6 +143,7 @@ document.getElementById("calcBtn").addEventListener("click", function () {
     resultsDiv.appendChild(block);
   }
 
+  /* // --- (تم إلغاء هذا الجزء بناءً على طلبك) ---
   // Optionally: full oven timeline (detailed)
   const detailBlock = document.createElement("div");
   detailBlock.className = "result-block";
@@ -161,5 +162,6 @@ document.getElementById("calcBtn").addEventListener("click", function () {
   });
   detailBlock.innerHTML += html;
   resultsDiv.appendChild(detailBlock);
+  */
 
 });
