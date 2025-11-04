@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
-<head>
+<html lang="ar" dir="rtl"> <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>مخطط خبز المصانع - Planner</title>
@@ -11,11 +10,16 @@
     <h1>Bakery Planner — جدول الأفران</h1>
 
     <section class="form-row">
-      <label>عدد الطبخات (batches)</label>
-      <input id="batches" type="number" min="1" placeholder="مثال: 18">
-    </section>
+      <label for="batches">عدد الطبخات (batches)</label>
+      <input id="batches" type="number" min="1" placeholder="مثال: 18" value="18"> </section>
 
     <section id="workers-area">
+      <div class="worker-row-header">
+        <span class="name-header">الاسم</span>
+        <span class="ovens-header">الأفران</span>
+        <span class="minutes-header">الدقائق</span>
+        <span class="startTime-header">وقت البدء</span>
+      </div>
       <div class="worker-row">
         <input class="name" type="text" placeholder="اسم (مثال: عدنان)" value="عدنان">
         <input class="ovens" type="number" min="0" placeholder="عدد الأفران" value="4">
@@ -47,9 +51,9 @@
 
     <button id="calcBtn">احسب الجدول</button>
 
-    <section id="summary">
-      <h2>النتائج</h2>
-      <div id="results"></div>
+    <section id="summary-section" style="display: none;"> <h2>النتائج</h2>
+      <div id="results">
+        </div>
     </section>
   </main>
 
