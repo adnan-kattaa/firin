@@ -28,55 +28,48 @@ document.getElementById("calcBtn").addEventListener("click", function () {
     const minutes = Number(r.querySelector(".minutes").value) || 0;
     const startTimeStr = r.querySelector(".startTime").value;
     const startMin = timeToMinutes(startTimeStr);
-    // skip completely empty rows (no name and ovens 0)
+    // skip completely empty rows
     if (!name && ovens === 0 && !minutes && !startMin) continue;
-    workers.push({name, ovens, minutes, startMin});
+    workers.push({name: name || `عامل ${workers.length + 1}`, ovens, minutes, startMin});
   }
   if (workers.length === 0) {
     alert("أدخل بيانات عامل واحد على الأقل.");
     return;
   }
 
-  // Build ovens list in sequence: ovens are objects with owner and local index and available time
+  // Build ovens list in sequence
   const ovensList = [];
-  let globalOvenId = 1;
+  let globalOvenId = 1; // يبدأ من 1
   for (const w of workers) {
     for (let i = 0; i < w.ovens; i++) {
       // initial available = worker start + i*2 minutes (2 minute gap between ovens of same worker)
       const initialAvail = (w.startMin != null) ? (w.startMin + i * 2) : 0;
       ovensList.push({
         id: globalOvenId++,
-        owner: w.name || `Worker${globalOvenId}`,
-        ownerIndex: ovensList.length, // not really needed
-        localIndex: i, // index within this worker
+        owner: w.name,
+        localIndex: i, 
         available: initialAvail, // in minutes since midnight
         ops: [] // list of {batch, start, end}
       });
     }
   }
 
-  // If no ovens at all
   if (ovensList.length === 0) {
     alert("لم تدخل أي أفران. أدخل عدد الأفران لكل عامل.");
     return;
   }
 
-  // Scheduling algorithm:
-  // For batch = 0 .. batches-1:
-  //  create 5 carts; for each cart find oven with earliest available time, schedule cart at that oven:
-  //   start = oven.available (we assume batch ready immediately)
-  //   end = start + minutesPerOven (we'll choose minutesPerOven from the owner of that oven)
-  // Note: minutesPerOven may differ per worker; we use the owner of the oven's minutes value.
-
-  // Helper to find worker minutes by name (first match)
+  // Helper to find worker minutes by name
   function minutesForOwner(ownerName) {
     const w = workers.find(x => x.name === ownerName);
     return w ? w.minutes : 0;
   }
 
-  // Simulate
+  // --- (خوارزمية الجدولة: تبقى كما هي) ---
+  // (5 عربات لكل طبخة، توزع على أول فرن متاح)
+  const allOpsList = []; // لتخزين جميع العمليات للجدول الزمني
+  
   for (let batch = 0; batch < batches; batch++) {
-    // For each batch, we need to schedule 5 carts
     for (let cart = 0; cart < 5; cart++) {
       // choose oven with minimum available time
       let minIdx = 0;
@@ -89,79 +82,125 @@ document.getElementById("calcBtn").addEventListener("click", function () {
       }
       const oven = ovensList[minIdx];
       const M = minutesForOwner(oven.owner);
-      if (!M || M <= 0) {
-        // If owner's minutes not set, assume 10 minutes default to avoid infinite
-        console.warn("Missing minutes per oven for owner:", oven.owner, "— using 10 min default.");
-      }
-      const useMinutes = (M && M>0) ? M : 10;
-      const start = oven.available; // start when oven free (we assume batch is ready)
+      const useMinutes = (M && M>0) ? M : 70; // استخدام 70 كافتراضي إذا لم يدخل
+      
+      const start = oven.available; 
       const end = start + useMinutes;
-      // record operation
-      oven.ops.push({batch: batch+1, start, end});
-      // update oven availability
+      
+      const op = {
+          batch: batch+1, 
+          cart: cart+1,
+          start, 
+          end,
+          owner: oven.owner, // إضافة لسهولة الفرز
+          ovenId: oven.id    // إضافة لسهولة الفرز
+      };
+      
+      oven.ops.push(op);
+      allOpsList.push(op); // إضافة العملية للقائمة العامة
+      
       oven.available = end;
     }
   }
+  // --- (نهاية الخوارزمية) ---
 
-  // Build results
+
+  // --- بناء النتائج (القسم الجديد بالكامل) ---
   const resultsDiv = document.getElementById("results");
-  resultsDiv.innerHTML = "";
+  resultsDiv.innerHTML = ""; // مسح النتائج القديمة
+  document.getElementById("summary-section").style.display = "block"; // إظهار قسم النتائج
 
-  // Per-oven summary table
-  const ovensByOwner = {};
-  ovensList.forEach(o => {
-    if (!ovensByOwner[o.owner]) ovensByOwner[o.owner] = [];
-    ovensByOwner[o.owner].push(o);
-  });
-
-  // Worker end times (take max available among their ovens)
-  const workerSummaries = workers.map(w => {
-    // find ovens for this worker
+  // 1. حساب ملخصات العمال
+  let workerSummaries = workers.map(w => {
     const owned = ovensList.filter(o => o.owner === w.name);
-    const lastFinish = owned.length ? Math.max(...owned.map(o => (o.ops.length? o.ops[o.ops.length-1].end : o.available))) : (w.startMin || 0);
-    return {name: w.name, ovens: owned, minutes: w.minutes, start: w.startMin, endMin: lastFinish};
+    let firstStart = null;
+    let lastFinish = w.startMin || 0;
+    
+    if (owned.length > 0) {
+        // إيجاد أول عملية تبدأ
+        const firstOps = owned.map(o => o.ops.length ? o.ops[0].start : Infinity);
+        firstStart = Math.min(...firstOps);
+        
+        // إيجاد آخر عملية تنتهي
+        const lastOps = owned.map(o => o.ops.length ? o.ops[o.ops.length-1].end : o.available);
+        lastFinish = Math.max(...lastOps);
+    }
+
+    return {
+      name: w.name, 
+      ovens: owned.length, 
+      minutes: w.minutes, 
+      start: w.startMin, 
+      firstOpStart: (firstStart === Infinity) ? null : firstStart,
+      endMin: lastFinish,
+      totalOps: owned.reduce((acc, o) => acc + o.ops.length, 0)
+    };
   });
 
-  // Show worker summaries
-  for (const ws of workerSummaries) {
-    const block = document.createElement("div");
-    block.className = "result-block";
-    block.innerHTML = `<div><strong>${ws.name}</strong> — يبدأ: <span class="small">${ws.start != null ? minutesToHHMM(ws.start) : "-"}</span> — ينتهي (آخر فرن): <strong>${minutesToHHMM(ws.endMin)}</strong></div>`;
-    // table of ovens for this worker
-    if (ws.ovens.length) {
-      let table = `<table class="table"><thead><tr><th>Oven ID</th><th>First start</th><th>Last end</th><th>#ops</th></tr></thead><tbody>`;
-      for (const o of ws.ovens) {
-        const firstStart = o.ops.length ? minutesToHHMM(o.ops[0].start) : "-";
-        const lastEnd = o.ops.length ? minutesToHHMM(o.ops[o.ops.length-1].end) : minutesToHHMM(o.available);
-        table += `<tr><td>${o.id}</td><td>${firstStart}</td><td>${lastEnd}</td><td>${o.ops.length}</td></tr>`;
-      }
-      table += `</tbody></table>`;
-      block.innerHTML += table;
-    } else {
-      block.innerHTML += `<div class="small">لا توجد أفران لهذا العامل.</div>`;
-    }
-    resultsDiv.appendChild(block);
-  }
+  // *** ترتيب ملخص العمال حسب الأسرع انتهاءً ***
+  workerSummaries.sort((a, b) => a.endMin - b.endMin);
 
-  /* // --- (تم إلغاء هذا الجزء بناءً على طلبك) ---
-  // Optionally: full oven timeline (detailed)
+  // 2. عرض ملخص العمال
+  const summaryBlock = document.createElement("div");
+  summaryBlock.className = "result-block";
+  summaryBlock.innerHTML = `<h3>ملخص العمال (مرتب حسب وقت الانتهاء)</h3>`;
+  const summaryGrid = document.createElement("div");
+  summaryGrid.className = "summary-grid";
+
+  workerSummaries.forEach((ws, index) => {
+    const div = document.createElement("div");
+    div.className = "worker-summary";
+    div.innerHTML = `
+      <div>
+        <span class="rank">#${index + 1}</span>
+        <strong>${ws.name}</strong>
+      </div>
+      <div class="summary-details">
+        ينتهي: <span class="summary-time">${minutesToHHMM(ws.endMin)}</span><br>
+        يبدأ (الفرن): <span class="summary-time">${ws.firstOpStart != null ? minutesToHHMM(ws.firstOpStart) : "-"}</span><br>
+        إجمالي العمليات: <span class="summary-time">${ws.totalOps}</span> (${ws.ovens} أفران)
+      </div>
+    `;
+    summaryGrid.appendChild(div);
+  });
+  summaryBlock.appendChild(summaryGrid);
+  resultsDiv.appendChild(summaryBlock);
+
+
+  // 3. عرض الجدول الزمني المفصل (مرتب زمنياً)
+  // (allOpsList تم ملؤها أثناء الخوارزمية)
+  allOpsList.sort((a, b) => a.start - b.start); // ترتيب زمني
+
   const detailBlock = document.createElement("div");
   detailBlock.className = "result-block";
-  detailBlock.innerHTML = `<strong>تفصيل كل فرن (عمليات)</strong>`;
-  let html = "";
-  ovensList.forEach(o => {
-    html += `<div style="margin-top:8px"><em>Oven ${o.id} — Owner: ${o.owner}</em><div class="small">Operations: ${o.ops.length}</div>`;
-    if (o.ops.length) {
-      html += `<table class="table"><thead><tr><th>Batch</th><th>Start</th><th>End</th></tr></thead><tbody>`;
-      o.ops.forEach(op => {
-        html += `<tr><td>${op.batch}</td><td>${minutesToHHMM(op.start)}</td><td>${minutesToHHMM(op.end)}</td></tr>`;
-      });
-      html += `</tbody></table>`;
-    }
-    html += `</div>`;
-  });
-  detailBlock.innerHTML += html;
+  detailBlock.innerHTML = `<h3>الجدول الزمني المفصل (مرتب زمنياً)</h3>`;
+  
+  let table = `<table class="table timeline-table">
+                <thead>
+                  <tr>
+                    <th>وقت البدء</th>
+                    <th>العامل</th>
+                    <th>الفرن #</th>
+                    <th>الطبخة #</th>
+                    <th>العربة #</th>
+                    <th>وقت الانتهاء</th>
+                  </tr>
+                </thead>
+                <tbody>`;
+
+  for (const op of allOpsList) {
+    table += `<tr>
+                <td><strong>${minutesToHHMM(op.start)}</strong></td>
+                <td>${op.owner}</td>
+                <td>${op.ovenId}</td>
+                <td>${op.batch}</td>
+                <td>${op.cart} / 5</td>
+                <td>${minutesToHHMM(op.end)}</td>
+              </tr>`;
+  }
+  
+  table += `</tbody></table>`;
+  detailBlock.innerHTML += table;
   resultsDiv.appendChild(detailBlock);
-  */
 
 });
