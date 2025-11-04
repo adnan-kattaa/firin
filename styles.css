@@ -3,15 +3,16 @@
   --card: #fff;
   --accent: #1366d6;
   --muted: #6b7280;
+  --border-light: #e6e9ef;
 }
 
 *{box-sizing:border-box}
 body{
   margin:0;
-  font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+  font-family: -apple-system, "Segoe UI", Tahoma, Arial, sans-serif; /* خطوط أفضل */
   background:var(--bg);
   color:#111827;
-  padding:18px;
+  padding: 10px; /* تعديل للهواتف */
 }
 
 .card{
@@ -19,36 +20,136 @@ body{
   margin:10px auto;
   background:var(--card);
   border-radius:8px;
-  padding:18px;
+  padding: 18px;
   box-shadow:0 6px 18px rgba(16,24,40,0.06);
 }
 
-h1{margin:0 0 12px;font-size:20px}
-.form-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.form-row label{min-width:150px;color:var(--muted)}
-#batches{flex:1;padding:8px;border-radius:6px;border:1px solid #e6e9ef}
+h1{margin:0 0 16px;font-size:22px}
+h2{margin: 16px 0 10px; border-bottom: 2px solid var(--border-light); padding-bottom: 8px;}
+h3{margin: 10px 0 8px; font-size: 16px; color: var(--accent);}
 
+.form-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
+.form-row label{min-width:150px;color:var(--muted);font-weight: 500;}
+#batches{flex:1;padding:8px;border-radius:6px;border:1px solid var(--border-light)}
+
+/* ----- منطقة العمال ----- */
+.worker-row-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 4px;
+}
 .worker-row{display:flex;gap:8px;margin-bottom:8px}
 .worker-row input{
-  padding:8px;border-radius:6px;border:1px solid #e6e9ef;
+  padding:8px;border-radius:6px;border:1px solid var(--border-light);
   min-width:0;
+  font-size: 14px;
 }
-.worker-row .name{flex:2}
-.worker-row .ovens{width:88px}
-.worker-row .minutes{width:120px}
-.worker-row .startTime{width:120px}
+
+/* توزيع الحقول بناءً على الأسماء في HTML */
+.name, .name-header { flex: 2; min-width: 120px; }
+.ovens, .ovens-header { width: 88px; }
+.minutes, .minutes-header { width: 120px; }
+.startTime, .startTime-header { width: 120px; }
+/* ----- نهاية منطقة العمال ----- */
+
 
 button#calcBtn{
-  margin-top:8px;padding:10px 12px;border-radius:6px;border:0;background:var(--accent);
-  color:#fff;font-weight:600;cursor:pointer;width:100%;
+  margin-top:8px;padding:12px 14px;border-radius:6px;border:0;background:var(--accent);
+  color:#fff;font-weight:600;cursor:pointer;width:100%;font-size: 16px;
 }
 button#calcBtn:hover{opacity:0.95}
 
-#summary{margin-top:14px}
-#results{background:#fbfdff;padding:10px;border-radius:6px;border:1px solid #eef3ff;max-height:420px;overflow:auto}
-.result-block{margin-bottom:10px;padding:8px;border-left:4px solid #dbeafe;background:#fff}
+#summary-section{margin-top:14px}
+#results{
+  background:#fbfdff;padding:4px;border-radius:6px;
+  border:1px solid #eef3ff;
+  max-height: 60vh; /* ارتفاع أطول */
+  overflow:auto
+}
+
+/* ----- تنسيق النتائج الجديد ----- */
+.result-block{
+  margin-bottom:10px;
+  padding:12px;
+  border: 1px solid var(--border-light);
+  background:#fff;
+  border-radius: 6px;
+}
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.worker-summary {
+  background: #fdfdfd;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #f0f4ff;
+  border-left: 4px solid var(--accent);
+}
+.worker-summary strong { font-size: 18px; color: #111; }
+.worker-summary .rank { font-size: 20px; font-weight: bold; color: var(--accent); margin-left: 8px;}
+.summary-details {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.summary-time { font-weight: 600; color: #333; }
+
 .small{color:var(--muted);font-size:13px}
 .table{width:100%;border-collapse:collapse;margin-top:8px}
-.table th,.table td{border-bottom:1px solid #f1f5f9;padding:6px;text-align:left;font-size:13px}
+.table th,.table td{
+  border-bottom:1px solid #f1f5f9;
+  padding: 8px 6px; /* زيادة الحشو */
+  text-align:right; /* لغة عربية */
+  font-size:13px;
+  vertical-align: middle;
+}
+.table th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+/* تنسيق الجدول الزمني */
+.timeline-table td:first-child { font-weight: 600; color: var(--accent); }
+.timeline-table td:nth-child(2) { color: #111; font-weight: 500; }
 
- 
+/* ----- تصميم الهواتف (Responsive) ----- */
+@media (max-width: 768px) {
+  body { padding: 8px; }
+  .card { padding: 12px; margin: 5px auto; }
+  h1 { font-size: 20px; }
+
+  /* جعل الحقول مكدسة */
+  .form-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .form-row label { text-align: right; min-width: unset; }
+
+  /* إخفاء رؤوس الأعمدة في الهواتف */
+  .worker-row-header { display: none; }
+  .worker-row {
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+  }
+  .worker-row input {
+    width: 100% !important; /* جعل العرض كامل */
+  }
+  /* استخدام placeholder كعناوين في الهواتف */
+  .worker-row .name::placeholder { color: #999; }
+  .worker-row .ovens::placeholder { color: #999; }
+  .worker-row .minutes::placeholder { color: #999; }
+  .worker-row .startTime::placeholder { color: #999; }
+
+  .summary-grid {
+    grid-template-columns: 1fr; /* عمود واحد في الهواتف */
+  }
+}
