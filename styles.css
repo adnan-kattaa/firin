@@ -139,7 +139,34 @@ button#calcBtn:hover{opacity:0.95}
     padding: 10px;
     border: 1px solid var(--border-light);
     border-radius: 6px;
+    
+    /* --- إضافات التمييز تبدأ من هنا --- */
+    border-width: 3px; /* لجعل الحافة الجانبية أعرض */
   }
+
+  /* ألوان مميزة لأول 4 عمال */
+  .worker-row:nth-of-type(1) {
+    border-left-color: #f97316; /* أزرق */
+  }
+  .worker-row:nth-of-type(2) {
+    border-left-color: #10b981; /* أخضر */
+  }
+  .worker-row:nth-of-type(3) {
+    border-left-color: #f97316; /* برتقالي */
+  }
+  .worker-row:nth-of-type(4) {
+    border-left-color: #8b5cf6; /* بنفسجي */
+  }
+
+  /* للتأكد أن أي عامل إضافي يأخذ لوناً (بالتناوب) */
+  .worker-row:nth-of-type(odd) {
+    border-color: #f97316;
+  }
+  .worker-row:nth-of-type(even) {
+    border-color: #10b981;
+  }
+  /* --- إضافات التمييز تنتهي هنا --- */
+
   .worker-row input {
     width: 100% !important; /* جعل العرض كامل */
   }
@@ -153,3 +180,4 @@ button#calcBtn:hover{opacity:0.95}
     grid-template-columns: 1fr; /* عمود واحد في الهواتف */
   }
 }
+
