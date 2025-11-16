@@ -51,6 +51,44 @@ document.querySelectorAll(".remove-batch-btn").forEach(btn => {
   });
 });
 
+// زر إضافة عامل جديد
+document.getElementById("addWorkerBtn").addEventListener("click", function () {
+  const workersArea = document.getElementById("workers-area");
+  const newRow = document.createElement("div");
+  newRow.className = "worker-row";
+  newRow.innerHTML = `
+    <input class="name" type="text" placeholder="اسم" value="">
+    <input class="ovens" type="number" min="0" placeholder="عدد الأفران" value="4">
+    <input class="startTime" type="time" placeholder="وقت البدء" value="">
+    <button class="remove-worker-btn" title="حذف">×</button>
+  `;
+
+  // إضافة حدث الحذف للزر الجديد
+  newRow.querySelector(".remove-worker-btn").addEventListener("click", function () {
+    const rows = document.querySelectorAll(".worker-row");
+    if (rows.length > 1) {
+      newRow.remove();
+    } else {
+      alert("يجب أن يكون هناك عامل واحد على الأقل");
+    }
+  });
+
+  // إدراج الصف الجديد قبل زر الإضافة
+  workersArea.insertBefore(newRow, document.getElementById("addWorkerBtn"));
+});
+
+// إضافة حدث الحذف لجميع أزرار حذف العمال الموجودة
+document.querySelectorAll(".remove-worker-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const rows = document.querySelectorAll(".worker-row");
+    if (rows.length > 1) {
+      btn.closest(".worker-row").remove();
+    } else {
+      alert("يجب أن يكون هناك عامل واحد على الأقل");
+    }
+  });
+});
+
 document.getElementById("calcBtn").addEventListener("click", function () {
   // قراءة معلومات الطبخات
   const batchRows = Array.from(document.querySelectorAll(".batch-config-row"));
