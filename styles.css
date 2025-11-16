@@ -124,6 +124,27 @@ h3{margin: 10px 0 8px; font-size: 16px; color: var(--accent);}
 .name, .name-header { flex: 2; min-width: 120px; }
 .ovens, .ovens-header { width: 100px; }
 .startTime, .startTime-header { width: 140px; }
+
+.remove-worker-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #ef4444;
+  background: #fff;
+  color: #ef4444;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.remove-worker-btn:hover {
+  background: #fee2e2;
+}
 /* ----- نهاية منطقة العمال ----- */
 
 
@@ -210,7 +231,8 @@ button#calcBtn:hover{opacity:0.95}
     padding: 10px;
     border: 1px solid var(--border-light);
     border-radius: 6px;
-    
+    position: relative;
+
     /* --- إضافات التمييز تبدأ من هنا --- */
     border-width: 3px; /* لجعل الحافة الجانبية أعرض */
   }
@@ -245,6 +267,12 @@ button#calcBtn:hover{opacity:0.95}
   .worker-row .name::placeholder { color: #999; }
   .worker-row .ovens::placeholder { color: #999; }
   .worker-row .startTime::placeholder { color: #999; }
+
+  .remove-worker-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
 
   .summary-grid {
     grid-template-columns: 1fr; /* عمود واحد في الهواتف */
