@@ -58,9 +58,9 @@ document.getElementById("calcBtn").addEventListener("click", function () {
 
   for (let r of batchRows) {
     const name = r.querySelector(".batch-name").value.trim();
-    const count = Number(r.querySelector(".batch-count").value) || 0;
-    const carts = Number(r.querySelector(".batch-carts").value) || 0;
-    const duration = Number(r.querySelector(".batch-duration").value) || 0;
+    const count = Math.ceil(Number(r.querySelector(".batch-count").value)) || 0;
+    const carts = Math.ceil(Number(r.querySelector(".batch-carts").value)) || 0;
+    const duration = Math.ceil(Number(r.querySelector(".batch-duration").value)) || 0;
 
     // تخطي الصفوف الفارغة بالكامل
     if (!name && count === 0 && carts === 0 && duration === 0) continue;
@@ -95,7 +95,7 @@ document.getElementById("calcBtn").addEventListener("click", function () {
   const workers = [];
   for (let r of rows) {
     const name = r.querySelector(".name").value.trim();
-    const ovens = Number(r.querySelector(".ovens").value) || 0;
+    const ovens = Math.ceil(Number(r.querySelector(".ovens").value)) || 0;
     const startTimeStr = r.querySelector(".startTime").value;
     const startMin = timeToMinutes(startTimeStr);
     // skip completely empty rows
