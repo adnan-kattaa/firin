@@ -9,11 +9,24 @@
   <main class="card">
     <h1>Bakery Planner — جدول الأفران</h1>
 
-    <section class="form-row">
-      <label for="batches">عدد الطبخات (batches)</label>
-      <input id="batches" type="number" min="1" placeholder="مثال: 18" value="18"> </section>
+    <section id="batches-area">
+      <h2>تكوين الطبخات</h2>
+      <div class="batch-config-header">
+        <span class="batch-name-header">اسم الطبخة</span>
+        <span class="batch-count-header">عدد الطبخات</span>
+        <span class="batch-carts-header">عدد العربات/طبخة</span>
+      </div>
+      <div class="batch-config-row">
+        <input class="batch-name" type="text" placeholder="مثال: عجين أبيض" value="عجين أبيض">
+        <input class="batch-count" type="number" min="1" placeholder="عدد" value="10">
+        <input class="batch-carts" type="number" min="1" placeholder="عربات" value="5">
+        <button class="remove-batch-btn" title="حذف">×</button>
+      </div>
+      <button id="addBatchBtn" class="add-btn">+ إضافة طبخة</button>
+    </section>
 
     <section id="workers-area">
+      <h2>تكوين العمال</h2>
       <div class="worker-row-header">
         <span class="name-header">الاسم</span>
         <span class="ovens-header">الأفران</span>
