@@ -21,6 +21,7 @@ document.getElementById("addBatchBtn").addEventListener("click", function () {
     <input class="batch-name" type="text" placeholder="مثال: عجين بني" value="">
     <input class="batch-count" type="number" min="1" placeholder="عدد" value="5">
     <input class="batch-carts" type="number" min="1" placeholder="عربات" value="5">
+    <input class="batch-duration" type="number" min="1" placeholder="دقائق" value="70">
     <button class="remove-batch-btn" title="حذف">×</button>
   `;
 
@@ -59,14 +60,16 @@ document.getElementById("calcBtn").addEventListener("click", function () {
     const name = r.querySelector(".batch-name").value.trim();
     const count = Number(r.querySelector(".batch-count").value) || 0;
     const carts = Number(r.querySelector(".batch-carts").value) || 0;
+    const duration = Number(r.querySelector(".batch-duration").value) || 0;
 
     // تخطي الصفوف الفارغة بالكامل
-    if (!name && count === 0 && carts === 0) continue;
+    if (!name && count === 0 && carts === 0 && duration === 0) continue;
 
     batchConfigs.push({
       name: name || `طبخة ${batchConfigs.length + 1}`,
       count: count,
-      carts: carts
+      carts: carts,
+      duration: duration
     });
   }
 
@@ -75,10 +78,14 @@ document.getElementById("calcBtn").addEventListener("click", function () {
     return;
   }
 
-  // التحقق من أن جميع الطبخات لديها عدد وعربات
+  // التحقق من أن جميع الطبخات لديها عدد وعربات ومدة
   for (let bc of batchConfigs) {
     if (bc.count <= 0 || bc.carts <= 0) {
       alert(`الطبخة "${bc.name}" يجب أن يكون لها عدد طبخات وعربات أكبر من صفر.`);
+      return;
+    }
+    if (bc.duration <= 0) {
+      alert(`الطبخة "${bc.name}" يجب أن يكون لها مدة فرن أكبر من صفر.`);
       return;
     }
   }
@@ -89,12 +96,11 @@ document.getElementById("calcBtn").addEventListener("click", function () {
   for (let r of rows) {
     const name = r.querySelector(".name").value.trim();
     const ovens = Number(r.querySelector(".ovens").value) || 0;
-    const minutes = Number(r.querySelector(".minutes").value) || 0;
     const startTimeStr = r.querySelector(".startTime").value;
     const startMin = timeToMinutes(startTimeStr);
     // skip completely empty rows
-    if (!name && ovens === 0 && !minutes && !startMin) continue;
-    workers.push({name: name || `عامل ${workers.length + 1}`, ovens, minutes, startMin});
+    if (!name && ovens === 0 && !startMin) continue;
+    workers.push({name: name || `عامل ${workers.length + 1}`, ovens, startMin});
   }
   if (workers.length === 0) {
     alert("أدخل بيانات عامل واحد على الأقل.");
@@ -122,12 +128,6 @@ document.getElementById("calcBtn").addEventListener("click", function () {
     return;
   }
 
-  // Helper to find worker minutes by name
-  function minutesForOwner(ownerName) {
-    const w = workers.find(x => x.name === ownerName);
-    return w ? w.minutes : 0;
-  }
-
   // --- خوارزمية الجدولة المحدثة ---
   // نمر على كل طبخة بالترتيب، ثم كل batch، ثم كل عربة
   const allOpsList = [];
@@ -148,8 +148,7 @@ document.getElementById("calcBtn").addEventListener("click", function () {
         }
 
         const oven = ovensList[minIdx];
-        const M = minutesForOwner(oven.owner);
-        const useMinutes = (M && M > 0) ? M : 70;
+        const useMinutes = config.duration;
 
         const start = oven.available;
         const end = start + useMinutes;
@@ -197,7 +196,6 @@ document.getElementById("calcBtn").addEventListener("click", function () {
     return {
       name: w.name,
       ovens: owned.length,
-      minutes: w.minutes,
       start: w.startMin,
       firstOpStart: (firstStart === Infinity) ? null : firstStart,
       endMin: lastFinish,

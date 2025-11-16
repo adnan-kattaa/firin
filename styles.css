@@ -63,6 +63,7 @@ h3{margin: 10px 0 8px; font-size: 16px; color: var(--accent);}
 .batch-name, .batch-name-header { flex: 3; min-width: 140px; }
 .batch-count, .batch-count-header { width: 100px; }
 .batch-carts, .batch-carts-header { width: 120px; }
+.batch-duration, .batch-duration-header { width: 120px; }
 
 .remove-batch-btn {
   width: 32px;
@@ -121,9 +122,8 @@ h3{margin: 10px 0 8px; font-size: 16px; color: var(--accent);}
 
 /* توزيع الحقول بناءً على الأسماء في HTML */
 .name, .name-header { flex: 2; min-width: 120px; }
-.ovens, .ovens-header { width: 88px; }
-.minutes, .minutes-header { width: 120px; }
-.startTime, .startTime-header { width: 120px; }
+.ovens, .ovens-header { width: 100px; }
+.startTime, .startTime-header { width: 140px; }
 /* ----- نهاية منطقة العمال ----- */
 
 
@@ -244,7 +244,6 @@ button#calcBtn:hover{opacity:0.95}
   /* استخدام placeholder كعناوين في الهواتف */
   .worker-row .name::placeholder { color: #999; }
   .worker-row .ovens::placeholder { color: #999; }
-  .worker-row .minutes::placeholder { color: #999; }
   .worker-row .startTime::placeholder { color: #999; }
 
   .summary-grid {

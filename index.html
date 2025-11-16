@@ -15,11 +15,13 @@
         <span class="batch-name-header">اسم الطبخة</span>
         <span class="batch-count-header">عدد الطبخات</span>
         <span class="batch-carts-header">عدد العربات/طبخة</span>
+        <span class="batch-duration-header">مدة الفرن (دقائق)</span>
       </div>
       <div class="batch-config-row">
         <input class="batch-name" type="text" placeholder="مثال: عجين أبيض" value="عجين أبيض">
         <input class="batch-count" type="number" min="1" placeholder="عدد" value="10">
         <input class="batch-carts" type="number" min="1" placeholder="عربات" value="5">
+        <input class="batch-duration" type="number" min="1" placeholder="دقائق" value="70">
         <button class="remove-batch-btn" title="حذف">×</button>
       </div>
       <button id="addBatchBtn" class="add-btn">+ إضافة طبخة</button>
@@ -30,34 +32,29 @@
       <div class="worker-row-header">
         <span class="name-header">الاسم</span>
         <span class="ovens-header">الأفران</span>
-        <span class="minutes-header">الدقائق</span>
         <span class="startTime-header">وقت البدء</span>
       </div>
       <div class="worker-row">
         <input class="name" type="text" placeholder="اسم (مثال: عدنان)" value="عدنان">
         <input class="ovens" type="number" min="0" placeholder="عدد الأفران" value="4">
-        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن" value="70">
         <input class="startTime" type="time" placeholder="وقت البدء" value="07:30">
       </div>
 
       <div class="worker-row">
         <input class="name" type="text" placeholder="اسم" value="umut">
         <input class="ovens" type="number" min="0" placeholder="عدد الأفران" value="4">
-        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن" value="70">
         <input class="startTime" type="time" placeholder="وقت البدء" value="07:40">
       </div>
 
       <div class="worker-row">
         <input class="name" type="text" placeholder="اسم" value="mustafa">
         <input class="ovens" type="number" min="0" placeholder="عدد الأفران" value="4">
-        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن" value="70">
         <input class="startTime" type="time" placeholder="وقت البدء" value="07:50">
       </div>
 
       <div class="worker-row">
         <input class="name" type="text" placeholder="اسم" value="hasan">
         <input class="ovens" type="number" min="0" placeholder="عدد الأفران" value="4">
-        <input class="minutes" type="number" min="1" placeholder="دقائق لكل فرن" value="70">
         <input class="startTime" type="time" placeholder="وقت البدء" value="08:00">
       </div>
     </section>
