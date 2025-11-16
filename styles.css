@@ -28,9 +28,80 @@ h1{margin:0 0 16px;font-size:22px}
 h2{margin: 16px 0 10px; border-bottom: 2px solid var(--border-light); padding-bottom: 8px;}
 h3{margin: 10px 0 8px; font-size: 16px; color: var(--accent);}
 
-.form-row{display:flex;gap:10px;align-items:center;margin-bottom:12px}
-.form-row label{min-width:150px;color:var(--muted);font-weight: 500;}
-#batches{flex:1;padding:8px;border-radius:6px;border:1px solid var(--border-light)}
+/* ----- منطقة تكوين الطبخات ----- */
+#batches-area {
+  margin-bottom: 20px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.batch-config-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--muted);
+  padding: 0 4px;
+}
+
+.batch-config-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.batch-config-row input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-light);
+  min-width: 0;
+  font-size: 14px;
+}
+
+.batch-name, .batch-name-header { flex: 3; min-width: 140px; }
+.batch-count, .batch-count-header { width: 100px; }
+.batch-carts, .batch-carts-header { width: 120px; }
+
+.remove-batch-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #ef4444;
+  background: #fff;
+  color: #ef4444;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.remove-batch-btn:hover {
+  background: #fee2e2;
+}
+
+.add-btn {
+  margin-top: 8px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px dashed var(--accent);
+  background: #fff;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+}
+
+.add-btn:hover {
+  background: #eff6ff;
+}
+/* ----- نهاية منطقة تكوين الطبخات ----- */
 
 /* ----- منطقة العمال ----- */
 .worker-row-header {
@@ -178,6 +249,29 @@ button#calcBtn:hover{opacity:0.95}
 
   .summary-grid {
     grid-template-columns: 1fr; /* عمود واحد في الهواتف */
+  }
+
+  /* منطقة تكوين الطبخات في الهواتف */
+  #batches-area {
+    padding: 8px;
+  }
+  .batch-config-header { display: none; }
+  .batch-config-row {
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    border-left: 3px solid var(--accent);
+    position: relative;
+  }
+  .batch-config-row input {
+    width: 100% !important;
+  }
+  .remove-batch-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px;
   }
 }
 
